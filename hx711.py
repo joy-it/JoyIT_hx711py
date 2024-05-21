@@ -20,7 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 """
 
 
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
+import gpiozero
 import time
 import sys
 
@@ -39,17 +40,19 @@ class HX711:
         self.SCALE = 1
 
         # Setup the gpio pin numbering system
-        GPIO.setmode(GPIO.BCM)
+        # GPIO.setmode(GPIO.BCM)
 
         # Set the pin numbers
-        self.PD_SCK = pd_sck
-        self.DOUT = dout
+        self.PD_SCK = gpiozero.OutputDevice(pd_sck)
+
+        self.DOUT = gpiozero.DigitalInputDevice(dout, pull_up=False)
 
         # Setup the GPIO Pin as output
-        GPIO.setup(self.PD_SCK, GPIO.OUT)
+        #GPIO.setup(self.PD_SCK, GPIO.OUT)
+        
 
         # Setup the GPIO Pin as input
-        GPIO.setup(self.DOUT, GPIO.IN)
+        #GPIO.setup(self.DOUT, GPIO.IN)
 
         # Power up the chip
         self.power_up()
@@ -58,16 +61,17 @@ class HX711:
     def set_gain(self, gain=128):
 
         try:
-            if gain is 128:
+            if gain == 128:
                 self.GAIN = 3
-            elif gain is 64:
+            elif gain == 64:
                 self.GAIN = 2
-            elif gain is 32:
+            elif gain == 32:
                 self.GAIN = 1
         except:
             self.GAIN = 3  # Sets default GAIN at 128
 
-        GPIO.output(self.PD_SCK, False)
+        # GPIO.output(self.PD_SCK, False)
+        self.PD_SCK.off()
         self.read()
 
     def set_scale(self, scale):
@@ -104,7 +108,8 @@ class HX711:
         """
 
         # Control if the chip is ready
-        while not (GPIO.input(self.DOUT) == 0):
+        # while not (GPIO.input(self.DOUT) == 0):
+        while not (self.DOUT.is_active == 0):
             # Uncommenting the print below results in noisy output
             # print("No input from HX711.")
             pass
@@ -119,20 +124,26 @@ class HX711:
         count = 0
 
         for i in range(24):
-            GPIO.output(self.PD_SCK, True)
+            # GPIO.output(self.PD_SCK, True)
+            self.PD_SCK.on()
             count = count << 1
-            GPIO.output(self.PD_SCK, False)
-            if(GPIO.input(self.DOUT)):
+            # GPIO.output(self.PD_SCK, False)
+            self.PD_SCK.off()
+            if(self.DOUT.is_active == 1):
                 count += 1
 
-        GPIO.output(self.PD_SCK, True)
+        # GPIO.output(self.PD_SCK, True)
+        self.PD_SCK.on()
         count = count ^ 0x800000
-        GPIO.output(self.PD_SCK, False)
+        # GPIO.output(self.PD_SCK, False)
+        self.PD_SCK.off()
 
         # set channel and gain factor for next reading
         for i in range(self.GAIN):
-            GPIO.output(self.PD_SCK, True)
-            GPIO.output(self.PD_SCK, False)
+            #GPIO.output(self.PD_SCK, True)
+            #GPIO.output(self.PD_SCK, False)
+            self.PD_SCK.on()
+            self.PD_SCK.off()
 
         return count
 
@@ -169,11 +180,14 @@ class HX711:
         """
         Power the chip down
         """
-        GPIO.output(self.PD_SCK, False)
-        GPIO.output(self.PD_SCK, True)
+        # GPIO.output(self.PD_SCK, False)
+        # GPIO.output(self.PD_SCK, True)
+        self.PD_SCK.off()
+        self.PD_SCK.on()
 
     def power_up(self):
         """
         Power the chip up
         """
-        GPIO.output(self.PD_SCK, False)
+        # GPIO.output(self.PD_SCK, False)
+        self.PD_SCK.off()

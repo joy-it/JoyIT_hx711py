@@ -34,7 +34,8 @@ of the offset and scale values!
 #######################################################################
 """
 
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
+import gpiozero
 import time
 import sys
 from hx711 import HX711
@@ -53,7 +54,7 @@ hx = HX711(5, 6, gain=128)
 
 def cleanAndExit():
     print("Cleaning up...")
-    GPIO.cleanup()
+    # GPIO.cleanup()
     print("Bye!")
     sys.exit()
 
@@ -65,9 +66,9 @@ def setup():
     print("Initializing.\n Please ensure that the scale is empty.")
     scale_ready = False
     while not scale_ready:
-        if (GPIO.input(hx.DOUT) == 0):
+        if (hx.DOUT.is_active == 0):
             scale_ready = False
-        if (GPIO.input(hx.DOUT) == 1):
+        if (hx.DOUT.is_active == 1):
             print("Initialization complete!")
             scale_ready = True
 
@@ -113,7 +114,7 @@ def loop():
             else:
                 print("Invalid selection.\n")
     except (KeyboardInterrupt, SystemExit):
-        cleanAndExit()
+          cleanAndExit()
 
 
 ##################################

@@ -20,28 +20,36 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 ##################
-PYTHON 2.7 EXAMPLE
+PYTHON 3 EXAMPLE
 
-This version of example is python 2.7 compatible
+This version of example is python 3 compatible
 and outputs weight in grams.
 
 Make sure you enter the correct values for offset and scale!
 Also, don't forget to set the correct gain, default is 128.
 """
 
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
+import gpiozero
 import time
 import sys
 from hx711 import HX711
+
+# Force Python 3 ###########################################################
+
+if sys.version_info[0] != 3:
+    raise Exception("Python 3 is required.")
+
+############################################################################
 
 
 hx = HX711(5, 6)
 
 
 def cleanAndExit():
-    print "Cleaning..."
-    GPIO.cleanup()
-    print "Bye!"
+    print("Cleaning...")
+    # GPIO.cleanup()
+    print("Bye!")
     sys.exit()
 
 
@@ -51,8 +59,6 @@ def setup():
     """
     hx.set_offset(`Place offset here`)
     hx.set_scale(`Place ratio here`)
-    hx.tare()
-    pass
 
 
 def loop():
@@ -62,7 +68,7 @@ def loop():
 
     try:
         val = hx.get_grams()
-        print val
+        print(val)
 
         hx.power_down()
         time.sleep(.001)

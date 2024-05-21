@@ -1,5 +1,5 @@
 # HX711PY
-Python library for the HX711 load cell amplifier and Raspberry Pi
+Updated Python library for the HX711 load cell amplifier and Raspberry Pi 5
 
 ## Initial Calibration
 
