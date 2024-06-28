@@ -1,6 +1,13 @@
 # HX711PY
 Updated Python library for the HX711 load cell amplifier and Raspberry Pi 5
 
+## Installation
+You can install this library from PyPI.
+To install it for the current user on your Raspberry Pi, use the following command:
+```
+pip install JoyIT-hx711py
+```
+
 ## Initial Calibration
 
 1. Place nothing on the scale, run the calibration.py and record the output. That is the **offset**.
