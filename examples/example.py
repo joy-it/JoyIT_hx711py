@@ -33,7 +33,7 @@ Also, don't forget to set the correct gain, default is 128.
 import gpiozero
 import time
 import sys
-from hx711 import HX711
+from JoyIT_hx711py import HX711
 
 # Force Python 3 ###########################################################
 

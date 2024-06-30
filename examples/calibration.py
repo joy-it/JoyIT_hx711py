@@ -38,7 +38,7 @@ of the offset and scale values!
 import gpiozero
 import time
 import sys
-from hx711 import HX711
+from JoyIT_hx711py import HX711
 
 # Force Python 3 ###########################################################
 
